@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Monitor Ładowania Baterii</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="navigation_drawer_close">Zamknij menu nawigacji</string>
+    <string name="navigation_drawer_open">Otwórz menu nawigacji</string>
+    <string name="title_history">Historia</string>
+    <string name="title_summary">Podsumowanie</string>
+</resources>
