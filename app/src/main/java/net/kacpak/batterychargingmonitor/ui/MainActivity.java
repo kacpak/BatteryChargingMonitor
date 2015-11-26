@@ -59,27 +59,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         final int id = item.getItemId();
-        Fragment fragment = null;
 
+        if (id == R.id.nav_settings) {
+            // Otworzenie ustawień
+        }
+
+        Fragment fragment = null;
         if (id == R.id.nav_summary)
             fragment = new SummaryFragment();
         else if (id == R.id.nav_history)

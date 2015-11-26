@@ -8,4 +8,51 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Units -->
+    <string name="percent" translatable="false">%1$d%%</string>
+    <string name="voltage" translatable="false">%1$dmV</string>
+    <string name="current" translatable="false">%1$dmA</string>
+    <string name="temperature_celsius" translatable="false">%1$.1f°C</string>
+    <string name="temperature_fahrenheit" translatable="false">%1$.1f°F</string>
+    <string name="count_times">%1$d times</string>
+    <string-array name="health_states" translatable="false">
+        <item>@string/health_unknown</item>
+        <item>@string/health_good</item>
+        <item>@string/health_overheat</item>
+        <item>@string/health_dead</item>
+        <item>@string/health_over_voltage</item>
+        <item>@string/health_unspecified_failure</item>
+        <item>@string/health_cold</item>
+    </string-array>
+    <string name="health_unknown">Unknown</string>
+    <string name="health_good">Good</string>
+    <string name="health_overheat">Overheat</string>
+    <string name="health_dead">Dead</string>
+    <string name="health_over_voltage">Over Voltage</string>
+    <string name="health_unspecified_failure">Unspecified Failure</string>
+    <string name="health_cold">Cold</string>
+    <string name="power_state_ac" translatable="false">AC</string>
+    <string name="power_state_usb" translatable="false">USB</string>
+    <string name="power_state_wireless" translatable="false">Wi</string>
+    <string name="power_state_mixed" translatable="false">Mix</string>
+
+    <!-- Summary -->
+    <string name="summary_health">Health</string>
+    <string name="summary_temperature">Temperature</string>
+    <string name="summary_voltage">Voltage</string>
+    <string name="summary_current">Current</string>
+    <string name="summary_charges_count">Charged</string>
+    <string name="menu_battery_settings">Battery Usage</string>
+
+    <!-- Power states -->
+    <string name="battery_percent">Battery: %1$d%%.</string>
+    <string name="battery_voltage">Voltage: %1$dmV.</string>
+    <string name="battery_temperature_celsius">Temperature: %1$.1f°C.</string>
+    <string name="battery_temperature_fahrenheit">Temperature: %1$.1f°F.</string>
+    <string name="battery_disconnected">Disconnected.</string>
+    <string name="battery_ac_charging">Charging with AC.</string>
+    <string name="battery_usb_charging">Charging with USB.</string>
+    <string name="battery_wireless_charging">Charging with Wireless.</string>
+    <string name="battery_charges_count">Charged %1$d times.</string>
 </resources>

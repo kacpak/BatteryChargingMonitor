@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
+    app:contentPadding="10dp">
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        app:columnCount="2">
+
+        <TextView android:text="@string/summary_health"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView android:id="@+id/health" tools:text="@string/health_good"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body2"
+            app:layout_gravity="right"/>
+
+        <TextView android:text="@string/summary_temperature"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView android:id="@+id/temperature" tools:text="34,6°C"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body2"
+            app:layout_gravity="right"/>
+
+        <TextView android:text="@string/summary_voltage"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView android:id="@+id/voltage" tools:text="3830mV"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body2"
+            app:layout_gravity="right"/>
+
+        <TextView android:text="@string/summary_current"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView android:id="@+id/current" tools:text="459mA"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body2"
+            app:layout_gravity="right"/>
+
+        <TextView android:text="@string/summary_charges_count"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView android:id="@+id/counter" tools:text="2 razy"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body2"
+            app:layout_gravity="right"/>
+    </android.support.v7.widget.GridLayout>
+</android.support.v7.widget.CardView>

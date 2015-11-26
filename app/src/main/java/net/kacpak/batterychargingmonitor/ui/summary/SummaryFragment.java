@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
 
@@ -44,8 +46,8 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         mActionsListener.stopUpdates();
     }
 
@@ -57,28 +59,40 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryChargeIndicator.setProgress(percentage);
     }
 
-    @Override
-    public void setBatteryHealth(@IdRes int healthId) {
+    @Bind(R.id.health)
+    TextView mBatteryHealth;
 
+    @Override
+    public void setBatteryHealth(@StringRes int healthId) {
+        mBatteryHealth.setText(healthId);
     }
+
+    @Bind(R.id.voltage)
+    TextView mBatteryVoltage;
 
     @Override
     public void setBatteryVoltage(int voltage) {
+        mBatteryVoltage.setText(String.format(getString(R.string.voltage), voltage));
+    }
 
+    @Bind(R.id.temperature)
+    TextView mBatteryTemperature;
+
+    @Override
+    public void setBatteryTemperatureInCelsius(double temperature) {
+        mBatteryTemperature.setText(String.format(getString(R.string.temperature_celsius), temperature));
     }
 
     @Override
-    public void setBatteryAmperage(int amperage) {
-
+    public void setBatteryTemperatureInFahrenheit(double temperature) {
+        mBatteryTemperature.setText(String.format(getString(R.string.temperature_fahrenheit), temperature));
     }
 
-    @Override
-    public void setBatteryTemperature(double temperature) {
-
-    }
+    @Bind(R.id.counter)
+    TextView mBatteryChargingCounter;
 
     @Override
     public void setBatteryChargingCounter(int counter) {
-
+        mBatteryChargingCounter.setText(String.format(getString(R.string.count_times), counter));
     }
 }

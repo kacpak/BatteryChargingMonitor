@@ -3,6 +3,7 @@ package net.kacpak.batterychargingmonitor.ui.summary;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import net.kacpak.batterychargingmonitor.R;
 import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
 
@@ -35,6 +36,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
     public SummaryPresenter(@NonNull SummaryContract.View mSummaryView) {
         this.mSummaryView = mSummaryView;
         updateBatteryStatus();
+        updateView();
     }
 
     /**
@@ -48,8 +50,27 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      * Aktualizuje dane interfejsu użytkownika
      */
     @Override
-    public void updateAllData() {
-        mSummaryView.setBatteryChargeIndicator(mBatteryStatus.getPercentage());
+    public void updateView() {
+        mSummaryView.setBatteryChargeIndicator(mBatteryStatus.getChargePercentage());
+
+        if (true) // TODO check preference (cache it to not check every time)
+            mSummaryView.setBatteryTemperatureInCelsius(mBatteryStatus.getTemperatureInCelsius());
+        else
+            mSummaryView.setBatteryTemperatureInFahrenheit(mBatteryStatus.getTemperatureInFahrenheit());
+
+        mSummaryView.setBatteryVoltage(mBatteryStatus.getVoltage());
+
+        int healthStringId;
+        switch (mBatteryStatus.getHealthInformation()) {
+            case 2: healthStringId = R.string.health_good; break;
+            case 3: healthStringId = R.string.health_overheat; break;
+            case 4: healthStringId = R.string.health_dead; break;
+            case 5: healthStringId = R.string.health_over_voltage; break;
+            case 6: healthStringId = R.string.health_unspecified_failure; break;
+            case 7: healthStringId = R.string.health_cold; break;
+            default: healthStringId = R.string.health_unknown;
+        }
+        mSummaryView.setBatteryHealth(healthStringId);
     }
 
     /**
@@ -65,7 +86,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
             public void run() {
                 if (mUpdateData) {
                     updateBatteryStatus();
-                    updateAllData();
+                    updateView();
                     handler.postDelayed(this, DATA_UPDATE_INTERVAL);
                 }
             }

@@ -6,4 +6,27 @@
     <string name="navigation_drawer_open">Otwórz menu nawigacji</string>
     <string name="title_history">Historia</string>
     <string name="title_summary">Podsumowanie</string>
+    <string name="count_times">%1$d razy</string>
+    <string name="health_unknown">Nieznane</string>
+    <string name="health_good">Dobre</string>
+    <string name="health_overheat">Przegrzanie</string>
+    <string name="health_dead">Martwa</string>
+    <string name="health_over_voltage">Zbyt wysokie napięcie</string>
+    <string name="health_unspecified_failure">Nieznane uszkodzenie</string>
+    <string name="health_cold">Zbyt zimna</string>
+    <string name="summary_health">Zdrowie</string>
+    <string name="summary_temperature">Temperatura</string>
+    <string name="summary_voltage">Napięcie</string>
+    <string name="summary_current">Natężenie</string>
+    <string name="summary_charges_count">Ładowano</string>
+    <string name="menu_battery_settings">Zużycie Baterii</string>
+    <string name="battery_percent">Bateria: %1$d%%.</string>
+    <string name="battery_voltage">Napięcie: %1$dmV.</string>
+    <string name="battery_temperature_celsius">Temperatura: %1$.1f°C.</string>
+    <string name="battery_temperature_fahrenheit">Temperatura: %1$.1f°F.</string>
+    <string name="battery_charges_count">Ładowano %1$d razy.</string>
+    <string name="battery_disconnected">Odłączona.</string>
+    <string name="battery_ac_charging">Ładowanie normalne.</string>
+    <string name="battery_usb_charging">Ładowanie przez USB.</string>
+    <string name="battery_wireless_charging">Ładowanie bezprzewodowe.</string>
 </resources>
