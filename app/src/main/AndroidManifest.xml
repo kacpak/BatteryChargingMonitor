@@ -22,6 +22,11 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:authorities="net.kacpak.batterychargingmonitor"
+            android:name=".data.database.DataProvider"
+            android:exported="false" />
+
         <receiver android:name=".data.receiver.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>

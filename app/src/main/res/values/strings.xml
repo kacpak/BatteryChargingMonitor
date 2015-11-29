@@ -55,4 +55,16 @@
     <string name="battery_usb_charging">Charging with USB.</string>
     <string name="battery_wireless_charging">Charging with Wireless.</string>
     <string name="battery_charges_count">Charged %1$d times.</string>
+
+    <!-- Preferences -->
+    <string name="pref_key_add_to_count" translatable="false">add_to_count</string>
+    <string name="pref_key_add_to_count_title">Previous Charges</string>
+    <string name="pref_key_add_to_count_summary">Number of charges before installing this app</string>
+    <string name="pref_key_irrelevant_duration" translatable="false">irrelevant_duration</string>
+    <string name="pref_key_irrelevant_duration_title">Irrelevant Charging Duration</string>
+    <string name="pref_key_irrelevant_duration_summary">Minimum charging duration in seconds assuring entry won\'t be deleted</string>
+
+    <!-- Errors -->
+    <string name="error_failed_to_start_charging">Failed to save this charging.</string>
+    <string name="error_failed_complete_charging">Failed to complete charging.</string>
 </resources>

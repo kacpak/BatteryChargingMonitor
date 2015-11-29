@@ -7,7 +7,7 @@ import net.kacpak.batterychargingmonitor.data.database.DatabaseContract.DataEntr
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "battery_history.db";
 
     public DatabaseHelper(Context context) {
@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DataEntry.COLUMN_STOP_PERCENTAGE + " INTEGER NOT NULL DEFAULT 0, " +
                 DataEntry.COLUMN_STOP_VOLTAGE + " INTEGER NOT NULL DEFAULT 0, " +
                 DataEntry.COLUMN_STOP_TEMPERATURE_C + " REAL NOT NULL DEFAULT 0, " +
-                DataEntry.COLUMN_NOTE + " TEXT DEFAULT NULL, " +
+                DataEntry.COLUMN_NOTE + " TEXT DEFAULT NULL " +
                 " );";
 
         db.execSQL(SQL_CREATE_DATA_TABLE);

@@ -29,4 +29,10 @@
     <string name="battery_ac_charging">Ładowanie normalne.</string>
     <string name="battery_usb_charging">Ładowanie przez USB.</string>
     <string name="battery_wireless_charging">Ładowanie bezprzewodowe.</string>
+    <string name="error_failed_complete_charging">Nie udało sie zkończyć ładowania.</string>
+    <string name="error_failed_to_start_charging">Nie udało się zapisać ładowania.</string>
+    <string name="pref_key_add_to_count_summary">Liczba ładowań przed instalacją tej aplikacji</string>
+    <string name="pref_key_add_to_count_title">Poprzednie ładowania</string>
+    <string name="pref_key_irrelevant_duration_title">Nieistotna długość ładowania</string>
+    <string name="pref_key_irrelevant_duration_summary">Minimalny czas w sekundach, po którym wpisy nie będą automatycznie usuwane</string>
 </resources>
