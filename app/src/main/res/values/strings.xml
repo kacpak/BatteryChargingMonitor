@@ -58,11 +58,18 @@
 
     <!-- Preferences -->
     <string name="pref_key_add_to_count" translatable="false">add_to_count</string>
+    <string name="pref_key_add_to_count_default" translatable="false">0</string>
     <string name="pref_key_add_to_count_title">Previous Charges</string>
     <string name="pref_key_add_to_count_summary">Number of charges before installing this app</string>
     <string name="pref_key_irrelevant_duration" translatable="false">irrelevant_duration</string>
+    <string name="pref_key_irrelevant_duration_default" translatable="false">5</string>
     <string name="pref_key_irrelevant_duration_title">Irrelevant Charging Duration</string>
     <string name="pref_key_irrelevant_duration_summary">Minimum charging duration in seconds assuring entry won\'t be deleted</string>
+    <string name="pref_key_temperature_celsius" translatable="false">temperature_in_celsius</string>
+    <string name="pref_key_temperature_celsius_default" translatable="false">true</string>
+    <string name="pref_key_temperature_celsius_title">Temperature scale</string>
+    <string name="pref_key_temperature_celsius_summaryOn">Temperature in Celsius</string>
+    <string name="pref_key_temperature_celsius_summaryOff">Temperature in Fahrenheit</string>
 
     <!-- Errors -->
     <string name="error_failed_to_start_charging">Failed to save this charging.</string>

@@ -2,8 +2,12 @@ package net.kacpak.batterychargingmonitor.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
+import net.kacpak.batterychargingmonitor.R;
 import net.kacpak.batterychargingmonitor.data.database.DatabaseContract.DataEntry;
 
 import java.util.Arrays;
@@ -107,5 +111,36 @@ public class BatteryDataRepository {
     public int merge(int... ids) {
         // TODO merge
         return 0;
+    }
+
+    /**
+     * Ilość ładowań z uwzględnieniem preferencji
+     */
+    public int getChargedCount() {
+        return getChargedCount(true);
+    }
+
+    /**
+     * Ilość ładowań
+     * @param withPreferences true dla uwzględnienia danych od użytkownika
+     */
+    public int getChargedCount(boolean withPreferences) {
+        Cursor countCursor = mContext.getContentResolver().query(
+                DataEntry.CONTENT_URI,
+                new String[] {"count(*) AS count"},
+                null,
+                null,
+                null
+        );
+
+        int count = countCursor.moveToFirst() ? countCursor.getInt(0) : 0;
+        countCursor.close();
+
+        // Jeśli nie uwzględniamy preferencji, zwróć wartość
+        if (!withPreferences)
+            return count;
+
+        // Jeśli je uwzględniamy dodaj je do wyniku
+        return count + new UserPreferences(mContext).getPreviousChargesCount();
     }
 }

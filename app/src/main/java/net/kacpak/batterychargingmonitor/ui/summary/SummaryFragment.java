@@ -32,7 +32,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         super.onActivityCreated(savedInstanceState);
 
         setRetainInstance(true);
-        mActionsListener = new SummaryPresenter(this);
+        mActionsListener = new SummaryPresenter(this, getActivity());
         getActivity().setTitle(R.string.title_summary);
     }
 

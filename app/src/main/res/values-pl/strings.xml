@@ -35,4 +35,7 @@
     <string name="pref_key_add_to_count_title">Poprzednie ładowania</string>
     <string name="pref_key_irrelevant_duration_title">Nieistotna długość ładowania</string>
     <string name="pref_key_irrelevant_duration_summary">Minimalny czas w sekundach, po którym wpisy nie będą automatycznie usuwane</string>
+    <string name="pref_key_temperature_celsius_title">Temperatura</string>
+    <string name="pref_key_temperature_celsius_summaryOff">Temperatura w stopniach Fahrenheita</string>
+    <string name="pref_key_temperature_celsius_summaryOn">Temperatura w stopniach Celsjusza</string>
 </resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/pref_key_add_to_count"
+        android:title="@string/pref_key_add_to_count_title"
+        android:summary="@string/pref_key_add_to_count_summary"
+        android:numeric="signed|integer"
+        android:inputType="number"
+        android:singleLine="true"
+        android:defaultValue="@string/pref_key_add_to_count_default" />
+
+    <EditTextPreference
+        android:key="@string/pref_key_irrelevant_duration"
+        android:title="@string/pref_key_irrelevant_duration_title"
+        android:summary="@string/pref_key_irrelevant_duration_summary"
+        android:numeric="signed|integer"
+        android:inputType="number"
+        android:singleLine="true"
+        android:defaultValue="@string/pref_key_irrelevant_duration_default" />
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_temperature_celsius"
+        android:title="@string/pref_key_temperature_celsius_title"
+        android:defaultValue="@string/pref_key_temperature_celsius_default"
+        android:summaryOn="@string/pref_key_temperature_celsius_summaryOn"
+        android:summaryOff="@string/pref_key_temperature_celsius_summaryOff" />
+</PreferenceScreen>

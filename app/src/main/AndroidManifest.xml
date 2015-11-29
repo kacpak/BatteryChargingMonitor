@@ -22,6 +22,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
+        </activity>
+
         <provider
             android:authorities="net.kacpak.batterychargingmonitor"
             android:name=".data.database.DataProvider"

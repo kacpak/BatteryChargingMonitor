@@ -19,6 +19,10 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" } // To compile from GitHub when MavenCentral is outdated (circleprogress)
+}
+
 def supportLibrary = "23.1.1"
 
 dependencies {
@@ -33,7 +37,7 @@ dependencies {
     compile "com.android.support:gridlayout-v7:$supportLibrary"
 
     // Circle Progress
-    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
+    compile 'com.github.lzyzsd:circleprogress:a947edf' // change to new release when startingPoint is merged
 
     // Butter Knife
     compile 'com.jakewharton:butterknife:7.0.1'

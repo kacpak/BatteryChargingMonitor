@@ -1,12 +1,13 @@
 package net.kacpak.batterychargingmonitor.ui.summary;
 
+import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import net.kacpak.batterychargingmonitor.App;
 import net.kacpak.batterychargingmonitor.R;
 import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
+import net.kacpak.batterychargingmonitor.data.UserPreferences;
 
 public class SummaryPresenter implements SummaryContract.UserActionsListener {
 
@@ -21,6 +22,11 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
     private final SummaryContract.View mView;
 
     /**
+     * Kontekst aplikacji
+     */
+    private final Context mContext;
+
+    /**
      * Wskazuje czy należy zaktualizować widok
      */
     private boolean mUpdateData = false;
@@ -32,10 +38,11 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
 
     /**
      * Tworzy Presenter dla widoku podsumowania ({@link SummaryContract.View}) z automatyczną aktualizacją
-     * @param mView
+     * @param view
      */
-    public SummaryPresenter(@NonNull SummaryContract.View mView) {
-        this.mView = mView;
+    public SummaryPresenter(@NonNull SummaryContract.View view, Context context) {
+        mView = view;
+        mContext = context;
         updateBatteryStatus();
         updateView();
     }
@@ -44,7 +51,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      * Aktualizuje obecny stan baterii
      */
     private void updateBatteryStatus() {
-        mBatteryStatus = new BatteryDataRepository(App.getContext()).getStatus();
+        mBatteryStatus = new BatteryDataRepository(mContext).getStatus();
     }
 
     /**
@@ -56,7 +63,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
         mView.setBatteryChargeIndicator(mBatteryStatus.getChargePercentage());
 
         // Obecna temperatura baterii w wybranej jednostce
-        if (true) // TODO check preference (cache it to not check every time)
+        if (new UserPreferences(mContext).isTemperatureInCelsius())
             mView.setBatteryTemperatureInCelsius(mBatteryStatus.getTemperatureInCelsius());
         else
             mView.setBatteryTemperatureInFahrenheit(mBatteryStatus.getTemperatureInFahrenheit());
@@ -84,7 +91,9 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
         mView.setBatteryHealth(healthStringId);
 
         // Licznik ładowań
-        mView.setBatteryChargingCounter(0);
+        mView.setBatteryChargingCounter(
+                new BatteryDataRepository(mContext).getChargedCount()
+        );
     }
 
     /**

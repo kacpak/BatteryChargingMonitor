@@ -1,6 +1,7 @@
 package net.kacpak.batterychargingmonitor.ui;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 
 import net.kacpak.batterychargingmonitor.R;
 import net.kacpak.batterychargingmonitor.ui.history.HistoryFragment;
+import net.kacpak.batterychargingmonitor.ui.settings.SettingsActivity;
 import net.kacpak.batterychargingmonitor.ui.summary.SummaryFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -62,10 +64,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         final int id = item.getItemId();
 
+        // Ustawienia
         if (id == R.id.nav_settings) {
-            // Otworzenie ustawień
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
         }
 
+        // Zmiana fragmentu
         Fragment fragment = null;
         if (id == R.id.nav_summary)
             fragment = new SummaryFragment();
