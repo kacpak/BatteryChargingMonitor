@@ -1,4 +1,4 @@
-package net.kacpak.batterychargingmonitor.data;
+package net.kacpak.batterychargingmonitor.data.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

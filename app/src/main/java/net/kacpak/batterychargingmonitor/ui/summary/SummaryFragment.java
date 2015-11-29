@@ -1,12 +1,17 @@
 package net.kacpak.batterychargingmonitor.ui.summary;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -36,7 +41,35 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.content_summary, container, false);
         ButterKnife.bind(this, root);
+        setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_summary, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_battery_settings)
+            return showPowerUsage();
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Uruchamia domyślną aplikację monitorującą zużycie baterii
+     */
+    private boolean showPowerUsage() {
+        Intent powerUsageIntent = new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
+        ResolveInfo resolveInfo = getActivity().getPackageManager().resolveActivity(powerUsageIntent, 0);
+
+        // Check that the Battery app exists on this device
+        if (resolveInfo != null)
+            startActivity(powerUsageIntent);
+
+        return true;
     }
 
     @Override
@@ -73,6 +106,26 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
     @Override
     public void setBatteryVoltage(int voltage) {
         mBatteryVoltage.setText(String.format(getString(R.string.voltage), voltage));
+    }
+
+    @Bind(R.id.current)
+    TextView mBatteryCurrent;
+
+    @Override
+    public void setBatteryCurrent(int current) {
+        mBatteryCurrent.setText(String.format(getString(R.string.current), current));
+    }
+
+    @Override
+    public void setBatteryCurrent(int current, int currentAvg) {
+        String currentTxt = new StringBuilder()
+                .append(String.format(getString(R.string.current), current))
+                .append(" (")
+                .append(String.format(getString(R.string.current), currentAvg))
+                .append(')')
+                .toString();
+
+        mBatteryCurrent.setText(currentTxt);
     }
 
     @Bind(R.id.temperature)

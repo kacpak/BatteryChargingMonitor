@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".data.PowerConnectionReceiver">
+        <receiver android:name=".data.receiver.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>

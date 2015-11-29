@@ -12,4 +12,7 @@
 
     <color name="colorWindowBackground">#E5E5E5</color>
     <color name="colorDivider">#B6B6B6</color>
+
+    <color name="colorBlack54">#8B000000</color>
+    <color name="colorBlack26">#41000000</color>
 </resources>
