@@ -13,6 +13,7 @@ public interface SummaryContract {
         void setBatteryTemperatureInCelsius(double temperature);
         void setBatteryTemperatureInFahrenheit(double temperature);
         void setBatteryChargingCounter(int counter);
+        void hideBatteryCurrentData();
     }
 
     interface UserActionsListener {

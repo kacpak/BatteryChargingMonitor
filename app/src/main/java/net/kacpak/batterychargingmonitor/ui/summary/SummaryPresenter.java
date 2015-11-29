@@ -36,6 +36,9 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      */
     private BatteryStatus mBatteryStatus;
 
+    private Handler mRunnableHandler;
+    private Runnable mUpdater;
+
     /**
      * Tworzy Presenter dla widoku podsumowania ({@link SummaryContract.View}) z automatyczną aktualizacją
      * @param view
@@ -72,10 +75,13 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
         mView.setBatteryVoltage(mBatteryStatus.getVoltage());
 
         // Natężenie prądu
-        if (mBatteryStatus.getCurrentAverage() == 0)
-            mView.setBatteryCurrent(mBatteryStatus.getCurrent());
-        else
-            mView.setBatteryCurrent(mBatteryStatus.getCurrent(), mBatteryStatus.getCurrentAverage());
+        if (mBatteryStatus.isCurrentAvailable()) {
+            if (mBatteryStatus.isCurrentAverageAvailable())
+                mView.setBatteryCurrent(mBatteryStatus.getCurrent(), mBatteryStatus.getCurrentAverage());
+            else
+                mView.setBatteryCurrent(mBatteryStatus.getCurrent());
+        } else
+            mView.hideBatteryCurrentData();
 
         // Stan zdrowia baterii
         int healthStringId;
@@ -103,19 +109,21 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
     public void startUpdates() {
         mUpdateData = true;
 
-        // TODO Zastanów się czy nie zmienić koncepcji, bo wydaje mi się że obecny stop może powodować problemy z odpalaniem podwojnym
-        final Handler handler = new Handler();
-        final Runnable updateTask = new Runnable() {
+        if (mRunnableHandler != null)
+            mRunnableHandler.removeCallbacks(mUpdater);
+
+        mRunnableHandler = new Handler();
+        mUpdater = new Runnable() {
             @Override
             public void run() {
                 if (mUpdateData) {
                     updateBatteryStatus();
                     updateView();
-                    handler.postDelayed(this, DATA_UPDATE_INTERVAL);
+                    mRunnableHandler.postDelayed(mUpdater, DATA_UPDATE_INTERVAL);
                 }
             }
         };
-        handler.postDelayed(updateTask, DATA_UPDATE_INTERVAL);
+        mRunnableHandler.postDelayed(mUpdater, DATA_UPDATE_INTERVAL);
     }
 
     /**
@@ -124,6 +132,8 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
     @Override
     public void stopUpdates() {
         mUpdateData = false;
+        if (mRunnableHandler != null)
+            mRunnableHandler.removeCallbacks(mUpdater);
     }
 
 }

@@ -13,108 +13,157 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Aktualny status baterii
+ */
 public class BatteryStatus {
 
+    /**
+     * Battery Status Changed Intent
+     */
     private Intent mBatteryStatus;
 
-    private int mCurrent, mCurrentAvg;
+    /**
+     * Obecne natężenie prądu
+     */
+    private int mCurrent;
 
-    public BatteryStatus(Intent batteryStatusIntent) {
-        mBatteryStatus = batteryStatusIntent;
-        init();
-    }
+    /**
+     * Średnie natężenie prądu
+     */
+    private int mCurrentAvg;
 
+    /**
+     * Ścieżka do folderu systemowego zawierającego dane o stanie baterii
+     */
+    private static final String mBatteryDataPath = "/sys/class/power_supply/battery/";
+
+    /**
+     * Tworzy obiekt do odczytu stanu baterii
+     */
     public BatteryStatus() {
         IntentFilter mFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         mBatteryStatus = App.getContext().registerReceiver(null, mFilter);
-        init();
+        mCurrent = readBatteryStatus("current_now");
+        mCurrentAvg = readBatteryStatus("current_avg");
     }
 
-    private void init() {
-        mCurrent = readCurrent();
-        mCurrentAvg = readCurrentAverage();
+    /**
+     * Zwraca zadaną wartość z obecnego stanu baterii lub {@see defaultValue}
+     * @param name wybrana stała z {@see BatteryManager}
+     */
+    private int getBatteryStatusExtra(String name) {
+        return getBatteryStatusExtra(name, -1);
+    }
+
+    /**
+     * Zwraca zadaną wartość z obecnego stanu baterii lub {@see defaultValue}
+     * @param name wybrana stała z {@see BatteryManager}
+     * @param defaultValue wartoć domyślna
+     */
+    private int getBatteryStatusExtra(String name, int defaultValue) {
+        return mBatteryStatus.getIntExtra(name, defaultValue);
     }
 
     /**
      * Procent naładowania baterii
      */
     public int getChargePercentage() {
-        int level = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        int level = getBatteryStatusExtra(BatteryManager.EXTRA_LEVEL);
+        int scale = getBatteryStatusExtra(BatteryManager.EXTRA_SCALE);
         return (int)(100 * level / (float)scale);
     }
 
     /**
-     * Zwraca true jeśli telefon jest w trakcie ładowania
+     * Zwraca true jeśli telefon jest w trakcie ładowania lub ukończył ładowanie
      */
     public boolean isCharging() {
-        int status = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        int status = getBatteryStatusExtra(BatteryManager.EXTRA_STATUS);
         return status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
     }
+
     /**
-     * Metoda zwracająca liczbę odpowiadającą stałej BATTERY_PLUGGED_* w BatteryManager.java
-     * Standardowo:
-     *  1 : BATTERY_PLUGGED_AC
-     *  2 : BATTERY_PLUGGED_USB
-     *  4 : BATTERY_PLUGGED_WIRELESS
+     * Zwraca stałą BATTERY_PLUGGED z {@see BatteryManager}
+     * @return 1: BATTERY_PLUGGED_AC, 2: BATTERY_PLUGGED_USB, 3: BATTERY_PLUGGED_WIRELESS
      */
     public int getPluggedInformation() {
-        return mBatteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        return getBatteryStatusExtra(BatteryManager.EXTRA_PLUGGED);
     }
 
+    /**
+     * Czy bateria jest ładowana z portu USB
+     */
     public boolean isPluggedUSB() {
         return getPluggedInformation() == BatteryManager.BATTERY_PLUGGED_USB;
     }
 
+    /**
+     * Czy bateria ładowana jest ładowarką przewodową
+     */
     public boolean isPluggedAC() {
         return getPluggedInformation() == BatteryManager.BATTERY_PLUGGED_AC;
     }
 
+    /**
+     * Czy bateria ładowana jest bezprzewodowo
+     */
     public boolean isPluggedWireless() {
         return getPluggedInformation() == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
     /**
-     * Metoda zwracająca liczbę odpowiadającą stałej BATTER_HEALTH_* w BatteryManager.java
-     * Standardowo:
-     * 1 : UNKNOWN
-     * 2 : GOOD
-     * 3 : OVERHEAT
-     * 4 : DEAD
-     * 5 : OVER_VOLTAGE
-     * 6 : UNSPECIFIED_FAILURE
-     * 7 : COLD
-     *
-     * @return Stała BATTERY_HEALTH
+     * Zwraca stałą BATTERY_HEALTH z {@see BatteryManager}
+     * @return 1: UNKNOWN, 2: GOOD, 3: OVERHEAT, 4: DEAD, 5: OVER_VOLTAGE, 6: UNSPECIFIED_FAILURE, 7: COLD
      */
     public int getHealthInformation() {
-        return mBatteryStatus.getIntExtra(BatteryManager.EXTRA_HEALTH, -1);
+        return getBatteryStatusExtra(BatteryManager.EXTRA_HEALTH);
     }
 
+    /**
+     * Czy stan baterii nieokreślony
+     */
     public boolean isHealthUnknown() {
         return getHealthInformation() == 1;
     }
 
+    /**
+     * Czy stan baterii dobry
+     */
     public boolean isHealthGood() {
         return getHealthInformation() == 2;
     }
 
+    /**
+     * Czy bateria się przegrzewa
+     */
     public boolean isHealthOverheat() {
         return getHealthInformation() == 3;
     }
 
+    /**
+     * Czy bateria zużyta
+     */
     public boolean isHealthDead() {
         return getHealthInformation() == 4;
     }
 
+    /**
+     * Czy bateria ładowana zbyt wysokim prądem
+     */
     public boolean isHealthOverVoltage() {
         return getHealthInformation() == 5;
     }
 
+    /**
+     * Czy bateria uległa niezidentyfikowanemu uszkodzeniu
+     */
     public boolean isHealthUnspecifiedFailure() {
         return getHealthInformation() == 6;
     }
 
+    /**
+     * Czy bateria pracuje przy zbyt niskiej temperaturze
+     */
     public boolean isHealthCold() {
         return getHealthInformation() == 7;
     }
@@ -123,7 +172,7 @@ public class BatteryStatus {
      * Temperatura baterii w stopniach Celsjusza
      */
     public float getTemperatureInCelsius() {
-        return mBatteryStatus.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) / (float)10;
+        return getBatteryStatusExtra(BatteryManager.EXTRA_TEMPERATURE) / (float)10;
     }
 
     /**
@@ -137,7 +186,7 @@ public class BatteryStatus {
      * Napięcie baterii w mV
      */
     public int getVoltage() {
-        return mBatteryStatus.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+        return getBatteryStatusExtra(BatteryManager.EXTRA_VOLTAGE);
     }
 
     /**
@@ -148,6 +197,13 @@ public class BatteryStatus {
     }
 
     /**
+     * Informuje czy dane o obecnym natężeniu prądu są dostępne
+     */
+    public boolean isCurrentAvailable() {
+        return isBatteryStatusAvailable("current_now");
+    }
+
+    /**
      * Średnie natężenie prądu w mA
      */
     public int getCurrentAverage() {
@@ -155,17 +211,10 @@ public class BatteryStatus {
     }
 
     /**
-     * Odczytuje natężenie prądu w mA
+     * Informuje czy dane o średnim natężeniu prądu są dostępne
      */
-    private int readCurrent() {
-        return readBatteryStatus("current_now");
-    }
-
-    /**
-     * Odczytuje średnie natężenie prądu w mA
-     */
-    private int readCurrentAverage() {
-        return readBatteryStatus("current_avg");
+    public boolean isCurrentAverageAvailable() {
+        return isBatteryStatusAvailable("current_avg");
     }
 
     /**
@@ -173,7 +222,7 @@ public class BatteryStatus {
      * @param filename
      */
     private int readBatteryStatus(@NonNull String filename) {
-        File file = new File("/sys/class/power_supply/battery/" + filename);
+        File file = new File(mBatteryDataPath + filename);
 
         if (file.exists()) {
             BufferedReader reader = null;
@@ -197,5 +246,14 @@ public class BatteryStatus {
         }
 
         return 0;
+    }
+
+    /**
+     * Sprawdza czy dany stan baterii jest przechowywany w plikach systemowych
+     * @param filename nazwa pliku
+     */
+    private boolean isBatteryStatusAvailable(@NonNull String filename) {
+        File file = new File(mBatteryDataPath + filename);
+        return file.exists();
     }
 }

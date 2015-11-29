@@ -128,6 +128,15 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryCurrent.setText(currentTxt);
     }
 
+    @Bind(R.id.current_heading)
+    TextView mBatteryCurrentHeading;
+
+    @Override
+    public void hideBatteryCurrentData() {
+        mBatteryCurrent.setVisibility(View.GONE);
+        mBatteryCurrentHeading.setVisibility(View.GONE);
+    }
+
     @Bind(R.id.temperature)
     TextView mBatteryTemperature;
 

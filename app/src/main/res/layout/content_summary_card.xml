@@ -46,7 +46,7 @@
             style="@style/TextAppearance.AppCompat.Body2"
             app:layout_gravity="right"/>
 
-        <TextView android:text="@string/summary_current"
+        <TextView android:text="@string/summary_current" android:id="@+id/current_heading"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_marginBottom="8dp" />
