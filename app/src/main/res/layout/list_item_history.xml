@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingLeft="16dp"
+    android:paddingStart="16dp"
+    android:paddingRight="32dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="@drawable/history_list_selector"
+    android:gravity="center_vertical">
+
+    <TextView android:id="@+id/type"
+        android:layout_width="56dp" android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceListItemSmall"
+        android:text="@string/power_state_usb" />
+
+    <TextView android:id="@+id/duration"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/type"
+        android:layout_toEndOf="@id/type"
+        android:textAppearance="?android:textAppearanceListItemSmall"
+        android:text="@string/history_list_item_duration"
+        tools:text="2h 3m 13s"/>
+
+    <TextView android:id="@+id/percentage_increase"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_below="@id/type"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp"
+        android:textAppearance="?android:textAppearanceListItemSmall"
+        android:text="@string/history_list_item_percentage_increase"
+        tools:text="12% &#x2192; 80%" />
+
+</RelativeLayout>

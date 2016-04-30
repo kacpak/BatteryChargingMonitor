@@ -9,20 +9,35 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/colorWindowBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.MainActivity">
 
-    <com.github.lzyzsd.circleprogress.DonutProgress android:id="@+id/battery_charge_indicator"
-        android:layout_width="@dimen/battery_charge_indicator_size" android:layout_height="@dimen/battery_charge_indicator_size"
-        android:layout_gravity="center_horizontal" android:layout_marginBottom="16dp"
-        app:donut_text_size="48dp"
-        app:donut_finished_stroke_width="24dp"
-        app:donut_unfinished_stroke_width="24dp"
-        app:donut_finished_color="@color/colorPrimary"
-        app:donut_text_color="@color/colorPrimaryDark"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <com.github.lzyzsd.circleprogress.DonutProgress android:id="@+id/battery_charge_indicator"
+            android:layout_width="@dimen/battery_charge_indicator_size"
+            android:layout_height="@dimen/battery_charge_indicator_size"
+            app:donut_suffix_text="\uFE6A"
+            app:donut_circle_starting_degree="270"
+            app:donut_text_size="48dp"
+            app:donut_finished_stroke_width="18dp"
+            app:donut_unfinished_stroke_width="12dp"
+            app:donut_finished_color="@color/colorPrimary"
+            app:donut_text_color="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginBottom="24dp"
+        android:gravity="center">
+
+        <include layout="@layout/content_summary_card" />
+    </LinearLayout>
+
 </LinearLayout>
