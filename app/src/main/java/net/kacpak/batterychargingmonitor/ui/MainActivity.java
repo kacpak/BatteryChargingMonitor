@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NavigationDrawerManipulation {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -91,6 +91,23 @@ public class MainActivity extends AppCompatActivity
                     .commit();
 
         mDrawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public boolean disableNavigationDrawer() {
+        if (mDrawer == null) return false;
+
+        mDrawer.closeDrawers();
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        return true;
+    }
+
+    @Override
+    public boolean enableNavigationDrawer() {
+        if (mDrawer == null) return false;
+
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         return true;
     }
 }

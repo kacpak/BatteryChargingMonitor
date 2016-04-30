@@ -10,7 +10,7 @@
     android:paddingEnd="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:background="?android:selectableItemBackground"
+    android:background="@drawable/history_list_selector"
     android:gravity="center_vertical">
 
     <TextView android:id="@+id/type"

@@ -9,6 +9,18 @@
         <item name="actionBarStyle">@style/AppTheme.PopupOverlay</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/ActionMode</item>
+    </style>
+
+    <style name="ActionMode" parent="Widget.AppCompat.Toolbar">
+        <item name="background">@color/colorPrimary</item>
+        <item name="titleTextStyle">@style/Toolbar.Title</item>
+        <item name="height">?attr/actionBarSize</item>
+    </style>
+
+    <style name="Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/colorOnBackgroundText</item>
     </style>
 
     <style name="AppTheme.ColoredActionBar" parent="Base.AppTheme.ColoredActionBar" />

@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.database.DatabaseContract.DataEntry;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 
 public class HistoryPresenter implements HistoryContract.UserActionsListener {
@@ -18,7 +20,7 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
     /**
      * Kontekst aplikacji
      */
-    private final Context mContext;
+    private final WeakReference<Context> mContext;
 
     /**
      * Widok
@@ -45,15 +47,7 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
      */
     public HistoryPresenter(@NonNull HistoryContract.View mHistoryView, @NonNull Context context) {
         mView = new WeakReference<>(mHistoryView);
-        mContext = context;
-    }
-
-    /**
-     * Kliknięcie elementu listy
-     */
-    @Override
-    public void onClick(long id) {
-        Toast.makeText(mContext, "To jest ID " + id, Toast.LENGTH_SHORT).show();
+        mContext = new WeakReference<>(context);
     }
 
     /**
@@ -63,7 +57,7 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mContext,
+        return new CursorLoader(mContext.get(),
                 DataEntry.CONTENT_URI,
                 sProjection,
                 null,
@@ -84,5 +78,32 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
         HistoryContract.View view = mView.get();
         if (null != view)
             view.swapCursor(null);
+    }
+
+    @Override
+    public void removeIrrelevantEntries() {
+        int deletedCount = new BatteryDataRepository(mContext.get()).deleteIrrelevant();
+
+        HistoryContract.View view = mView.get();
+        if (null != view)
+            view.showDeletedCountMessage(deletedCount);
+    }
+
+    @Override
+    public void removeEntries(List<Long> entries) {
+        int deletedCount = new BatteryDataRepository(mContext.get()).delete(entries);
+
+        HistoryContract.View view = mView.get();
+        if (null != view)
+            view.showDeletedCountMessage(deletedCount);
+    }
+
+    @Override
+    public void mergeEntries(List<Long> entries) {
+        int mergedCount = new BatteryDataRepository(mContext.get()).merge(entries);
+
+        HistoryContract.View view = mView.get();
+        if (null != view)
+            view.showMergedCountMessage(mergedCount);
     }
 }

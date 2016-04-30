@@ -10,4 +10,5 @@
 
     <!-- Battery Charging Circle indicator size -->
     <dimen name="battery_charge_indicator_size">240dp</dimen>
+    <dimen name="history_detail_min_width">320dp</dimen>
 </resources>

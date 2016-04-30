@@ -36,6 +36,7 @@
     <string name="power_state_usb" translatable="false">USB</string>
     <string name="power_state_wireless" translatable="false">Wi</string>
     <string name="power_state_mixed" translatable="false">Mix</string>
+    <string name="power_state_unknown" translatable="false">\?</string>
 
     <!-- Summary -->
     <string name="summary_health">Health</string>
@@ -73,13 +74,12 @@
 
     <!-- History -->
     <string name="history_list_item_percentage_increase" translatable="false">%1$d%% &#x2192; %2$d%%</string>
-    <string name="history_list_item_percentage_while_charging" translatable="false">%1$d%% &#x2192; ???</string>
+    <string name="history_list_item_percentage_while_charging" translatable="false">%1$d%% &#x2192; ---</string>
     <string name="history_list_item_duration">%1$dh %2$dm %3$ds</string>
     <string name="history_list_selected_count">Selected: %1$d</string>
     <string name="history_list_menu_merge">Merge</string>
     <string name="history_list_menu_delete">Delete</string>
-    <string name="history_list_entries_merged">Entries were merged</string>
-    <string name="history_list_entries_deleted">Entries were deleted</string>
+    <string name="history_list_counted_entries_merged">Merged %1$d entries</string>
     <string name="history_list_counted_entries_deleted">Deleted %1$d entries</string>
     <string name="history_list_confirm_merge">Do you really want to merge this items?</string>
     <string name="history_list_confirm_delete">Do you really want to delete this items?</string>
@@ -90,9 +90,9 @@
     <string name="history_details_duration">Duration</string>
     <string name="history_details_charge_bump">Charge</string>
     <string name="history_details_charger_type">Charger Type</string>
-    <string name="history_details_start_temp">Starting Temperature</string>
+    <string name="history_details_start_temp">Initial Temperature</string>
     <string name="history_details_stop_temp">Finished Temperature</string>
-    <string name="history_details_start_voltage">Starting Voltage</string>
+    <string name="history_details_start_voltage">Initial Voltage</string>
     <string name="history_details_stop_voltage">Finished Voltage</string>
     <string name="history_details_not_finished" translatable="false">---</string>
 

@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import net.kacpak.batterychargingmonitor.R;
+import net.kacpak.batterychargingmonitor.data.database.ChargeInformation;
 import net.kacpak.batterychargingmonitor.data.database.DatabaseContract.DataEntry;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Zarządzanie danymi o baterii i historii ładowania
@@ -33,6 +35,28 @@ public class BatteryDataRepository {
      */
     public BatteryStatus getStatus() {
         return new BatteryStatus();
+    }
+
+    /**
+     * Zwraca stan ładowania baterii
+     * @param chargeId id z historii ładowania baterii
+     * @return stan ładowania baterii
+     */
+    public ChargeInformation getChargeInformation(long chargeId) {
+        Uri dataUri = DataEntry.buildUri(chargeId);
+        Cursor entryInfo = mContext.getContentResolver().query(
+                dataUri,
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (null == entryInfo)
+            return null;
+
+        entryInfo.moveToFirst();
+        return new ChargeInformation(entryInfo);
     }
 
     /**
@@ -86,8 +110,8 @@ public class BatteryDataRepository {
      * Usuwa z historii podane wpisy
      * @param ids ID wpisów w bazie danych
      */
-    public int delete(int... ids) {
-        String inClause = Arrays.asList(ids).toString().replace("[", "(").replace("]", ")");
+    public int delete(List<Long> ids) {
+        String inClause = ids.toString().replace("[", "(").replace("]", ")");
 
         return mContext.getContentResolver().delete(
                 DataEntry.CONTENT_URI,
@@ -100,17 +124,79 @@ public class BatteryDataRepository {
      * Usuwa nic nie wnoszące wpisy z historii (krótsze niż podane w preferencjach)
      */
     public int deleteIrrelevant() {
-        // TODO deleteIrrelevant
-        return 0;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        int minDuration = 0;
+        try {
+            String irrelevantDurationPreference = prefs.getString(mContext.getString(R.string.pref_key_irrelevant_duration), "0");
+            minDuration = Integer.parseInt(irrelevantDurationPreference) * 1000;
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        return mContext.getContentResolver().delete(
+                DataEntry.CONTENT_URI,
+                "CAST(ABS(" + DataEntry.COLUMN_STOP + " - " + DataEntry.COLUMN_START + ") AS INTEGER) <= " + minDuration,
+                null
+        );
     }
 
     /**
      * Łączy podane wpisy w jeden
      * @param ids ID wpisów w bazie danych
      */
-    public int merge(int... ids) {
-        // TODO merge
-        return 0;
+    public int merge(List<Long> ids) {
+        // Będziemy szukać tylko wpisów z id "(a, b, ...)"
+        String inClause = ids.toString().replace("[", "(").replace("]", ")");
+
+        Cursor entries = mContext.getContentResolver().query(
+                DataEntry.CONTENT_URI,
+                null,
+                DataEntry._ID + " IN " + inClause,
+                null,
+                DataEntry.COLUMN_START + " ASC"
+        );
+
+        // Ustalam typ wpisu dla łączenia
+        entries.moveToFirst();
+        final int typeColumnIndex = entries.getColumnIndex(DataEntry.COLUMN_TYPE);
+        int type = entries.getInt(typeColumnIndex);
+        while (entries.moveToNext()) {
+            if (entries.getInt(typeColumnIndex) != type) {
+                type = 0;
+                break;
+            }
+        }
+
+        // Wartości do wpisania
+        ContentValues values = new ContentValues();
+
+        // Sczytujemy część początkową
+        entries.moveToFirst();
+        values.put(DataEntry.COLUMN_START, entries.getLong(entries.getColumnIndex(DataEntry.COLUMN_START)));
+        values.put(DataEntry.COLUMN_START_PERCENTAGE, entries.getInt(entries.getColumnIndex(DataEntry.COLUMN_START_PERCENTAGE)));
+        values.put(DataEntry.COLUMN_START_TEMPERATURE_C, entries.getFloat(entries.getColumnIndex(DataEntry.COLUMN_START_TEMPERATURE_C)));
+        values.put(DataEntry.COLUMN_START_VOLTAGE, entries.getInt(entries.getColumnIndex(DataEntry.COLUMN_START_VOLTAGE)));
+        values.put(DataEntry.COLUMN_TYPE, type);
+
+        // Sczytujemy wartość końcową
+        entries.moveToLast();
+        values.put(DataEntry.COLUMN_STOP, entries.getLong(entries.getColumnIndex(DataEntry.COLUMN_STOP)));
+        values.put(DataEntry.COLUMN_STOP_PERCENTAGE, entries.getInt(entries.getColumnIndex(DataEntry.COLUMN_STOP_PERCENTAGE)));
+        values.put(DataEntry.COLUMN_STOP_TEMPERATURE_C, entries.getFloat(entries.getColumnIndex(DataEntry.COLUMN_STOP_TEMPERATURE_C)));
+        values.put(DataEntry.COLUMN_STOP_VOLTAGE, entries.getInt(entries.getColumnIndex(DataEntry.COLUMN_STOP_VOLTAGE)));
+
+        if (entries.getInt(entries.getColumnIndex(DataEntry.COLUMN_CHARGE_FINISHED)) == 1)
+            values.put(DataEntry.COLUMN_CHARGE_FINISHED, 1);
+
+        entries.close();
+
+
+        mContext.getContentResolver().insert(
+                DataEntry.CONTENT_URI,
+                values
+        );
+
+        return delete(ids);
     }
 
     /**
