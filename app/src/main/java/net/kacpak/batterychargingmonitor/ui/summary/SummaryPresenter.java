@@ -9,6 +9,8 @@ import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
 import net.kacpak.batterychargingmonitor.data.UserPreferences;
 
+import java.lang.ref.WeakReference;
+
 public class SummaryPresenter implements SummaryContract.UserActionsListener {
 
     /**
@@ -19,7 +21,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
     /**
      * Widok
      */
-    private final SummaryContract.View mView;
+    private final WeakReference<SummaryContract.View> mView;
 
     /**
      * Kontekst aplikacji
@@ -44,7 +46,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      * @param view
      */
     public SummaryPresenter(@NonNull SummaryContract.View view, Context context) {
-        mView = view;
+        mView = new WeakReference<>(view);
         mContext = context;
         updateBatteryStatus();
         updateView();
@@ -62,26 +64,31 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      */
     @Override
     public void updateView() {
+        SummaryContract.View view = mView.get();
+
+        if (null == view)
+            return;
+
         // Obecny stan naładowania baterii w procentach
-        mView.setBatteryChargeIndicator(mBatteryStatus.getChargePercentage());
+        view.setBatteryChargeIndicator(mBatteryStatus.getChargePercentage());
 
         // Obecna temperatura baterii w wybranej jednostce
         if (new UserPreferences(mContext).isTemperatureInCelsius())
-            mView.setBatteryTemperatureInCelsius(mBatteryStatus.getTemperatureInCelsius());
+            view.setBatteryTemperatureInCelsius(mBatteryStatus.getTemperatureInCelsius());
         else
-            mView.setBatteryTemperatureInFahrenheit(mBatteryStatus.getTemperatureInFahrenheit());
+            view.setBatteryTemperatureInFahrenheit(mBatteryStatus.getTemperatureInFahrenheit());
 
         // Napięcie na baterii
-        mView.setBatteryVoltage(mBatteryStatus.getVoltage());
+        view.setBatteryVoltage(mBatteryStatus.getVoltage());
 
         // Natężenie prądu
         if (mBatteryStatus.isCurrentAvailable()) {
             if (mBatteryStatus.isCurrentAverageAvailable())
-                mView.setBatteryCurrent(mBatteryStatus.getCurrent(), mBatteryStatus.getCurrentAverage());
+                view.setBatteryCurrent(mBatteryStatus.getCurrent(), mBatteryStatus.getCurrentAverage());
             else
-                mView.setBatteryCurrent(mBatteryStatus.getCurrent());
+                view.setBatteryCurrent(mBatteryStatus.getCurrent());
         } else
-            mView.hideBatteryCurrentData();
+            view.hideBatteryCurrentData();
 
         // Stan zdrowia baterii
         int healthStringId;
@@ -94,10 +101,10 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
             case 7: healthStringId = R.string.health_cold; break;
             default: healthStringId = R.string.health_unknown;
         }
-        mView.setBatteryHealth(healthStringId);
+        view.setBatteryHealth(healthStringId);
 
         // Licznik ładowań
-        mView.setBatteryChargingCounter(
+        view.setBatteryChargingCounter(
                 new BatteryDataRepository(mContext).getChargedCount()
         );
     }

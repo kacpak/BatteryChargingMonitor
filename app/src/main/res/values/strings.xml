@@ -71,6 +71,31 @@
     <string name="pref_key_temperature_celsius_summaryOn">Temperature in Celsius</string>
     <string name="pref_key_temperature_celsius_summaryOff">Temperature in Fahrenheit</string>
 
+    <!-- History -->
+    <string name="history_list_item_percentage_increase" translatable="false">%1$d%% &#x2192; %2$d%%</string>
+    <string name="history_list_item_percentage_while_charging" translatable="false">%1$d%% &#x2192; ???</string>
+    <string name="history_list_item_duration">%1$dh %2$dm %3$ds</string>
+    <string name="history_list_selected_count">Selected: %1$d</string>
+    <string name="history_list_menu_merge">Merge</string>
+    <string name="history_list_menu_delete">Delete</string>
+    <string name="history_list_entries_merged">Entries were merged</string>
+    <string name="history_list_entries_deleted">Entries were deleted</string>
+    <string name="history_list_counted_entries_deleted">Deleted %1$d entries</string>
+    <string name="history_list_confirm_merge">Do you really want to merge this items?</string>
+    <string name="history_list_confirm_delete">Do you really want to delete this items?</string>
+    <string name="menu_history_list_clear_entries">Clear Entries</string>
+
+    <!-- History Details -->
+    <string name="history_details_title">Charging Details</string>
+    <string name="history_details_duration">Duration</string>
+    <string name="history_details_charge_bump">Charge</string>
+    <string name="history_details_charger_type">Charger Type</string>
+    <string name="history_details_start_temp">Starting Temperature</string>
+    <string name="history_details_stop_temp">Finished Temperature</string>
+    <string name="history_details_start_voltage">Starting Voltage</string>
+    <string name="history_details_stop_voltage">Finished Voltage</string>
+    <string name="history_details_not_finished" translatable="false">---</string>
+
     <!-- Errors -->
     <string name="error_failed_to_start_charging">Failed to save this charging.</string>
     <string name="error_failed_complete_charging">Failed to complete charging.</string>

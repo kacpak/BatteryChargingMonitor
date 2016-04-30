@@ -20,7 +20,7 @@ import com.github.lzyzsd.circleprogress.DonutProgress;
 
 import net.kacpak.batterychargingmonitor.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SummaryFragment extends Fragment implements SummaryContract.View {
@@ -84,7 +84,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mActionsListener.stopUpdates();
     }
 
-    @Bind(R.id.battery_charge_indicator)
+    @BindView(R.id.battery_charge_indicator)
     DonutProgress mBatteryChargeIndicator;
 
     @Override
@@ -92,7 +92,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryChargeIndicator.setProgress(percentage);
     }
 
-    @Bind(R.id.health)
+    @BindView(R.id.health)
     TextView mBatteryHealth;
 
     @Override
@@ -100,7 +100,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryHealth.setText(healthId);
     }
 
-    @Bind(R.id.voltage)
+    @BindView(R.id.voltage)
     TextView mBatteryVoltage;
 
     @Override
@@ -108,7 +108,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryVoltage.setText(String.format(getString(R.string.voltage), voltage));
     }
 
-    @Bind(R.id.current)
+    @BindView(R.id.current)
     TextView mBatteryCurrent;
 
     @Override
@@ -128,7 +128,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryCurrent.setText(currentTxt);
     }
 
-    @Bind(R.id.current_heading)
+    @BindView(R.id.current_heading)
     TextView mBatteryCurrentHeading;
 
     @Override
@@ -137,7 +137,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryCurrentHeading.setVisibility(View.GONE);
     }
 
-    @Bind(R.id.temperature)
+    @BindView(R.id.temperature)
     TextView mBatteryTemperature;
 
     @Override
@@ -150,7 +150,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
         mBatteryTemperature.setText(String.format(getString(R.string.temperature_fahrenheit), temperature));
     }
 
-    @Bind(R.id.counter)
+    @BindView(R.id.counter)
     TextView mBatteryChargingCounter;
 
     @Override
