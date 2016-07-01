@@ -154,7 +154,7 @@ public class SummaryFragment extends Fragment implements SummaryContract.View {
     TextView mBatteryChargingCounter;
 
     @Override
-    public void setBatteryChargingCounter(int counter) {
+    public void setBatteryChargingCounter(long counter) {
         mBatteryChargingCounter.setText(String.format(getString(R.string.count_times), counter));
     }
 }

@@ -1,24 +1,19 @@
 package net.kacpak.batterychargingmonitor.ui.history;
 
-import android.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
+import net.kacpak.batterychargingmonitor.data.database.tables.Charge;
 
 import java.util.List;
 
 public interface HistoryContract {
     interface View {
-        void swapCursor(Cursor cursor);
-        void showDeletedCountMessage(int count);
-        void showMergedCountMessage(int count);
+        void swapCharges(List<Charge> charges);
+        void showDeletedCountMessage(long count);
+        void showMergedCountMessage(long count);
     }
 
     interface UserActionsListener {
-        Loader<Cursor> onCreateLoader(int id, Bundle args);
-        void onLoadFinished(Cursor data);
-        void onLoaderReset();
         void removeIrrelevantEntries();
-        void removeEntries(List<Long> entries);
-        void mergeEntries(List<Long> entries);
+        void removeEntries(long... entries);
+        void mergeEntries(long... entries);
     }
 }
