@@ -1,18 +1,14 @@
 package net.kacpak.batterychargingmonitor.ui.history;
 
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
+import net.kacpak.batterychargingmonitor.data.database.HistoryRepository;
+import net.kacpak.batterychargingmonitor.data.events.DatabaseUpdateEvent;
 
-import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
-import net.kacpak.batterychargingmonitor.data.database.DatabaseContract.DataEntry;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 
 public class HistoryPresenter implements HistoryContract.UserActionsListener {
@@ -28,61 +24,20 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
     private WeakReference<HistoryContract.View> mView;
 
     /**
-     * Pobierane dane z bazy danych
-     */
-    private static final String[] sProjection = {
-            DataEntry._ID,
-            DataEntry.COLUMN_START,
-            DataEntry.COLUMN_STOP,
-            DataEntry.COLUMN_START_PERCENTAGE,
-            DataEntry.COLUMN_STOP_PERCENTAGE,
-            DataEntry.COLUMN_TYPE,
-            DataEntry.COLUMN_CHARGE_FINISHED
-    };
-
-    /**
      * Tworzy Presenter dla widoku podsumowania ({@link HistoryContract.View}) z automatyczną aktualizacją
-     * @param mHistoryView Widok
-     * @param context Kontekst widoku
+     * @param historyView   Widok
+     * @param context       Kontekst widoku
      */
-    public HistoryPresenter(@NonNull HistoryContract.View mHistoryView, @NonNull Context context) {
-        mView = new WeakReference<>(mHistoryView);
+    public HistoryPresenter(@NonNull HistoryContract.View historyView, @NonNull Context context) {
+        mView = new WeakReference<>(historyView);
         mContext = new WeakReference<>(context);
-    }
-
-    /**
-     * Tworzy Loadera do wczytania danych o historii ładowania
-     * @param id id Loadera
-     * @param args dodatkowe argumenty
-     */
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mContext.get(),
-                DataEntry.CONTENT_URI,
-                sProjection,
-                null,
-                null,
-                DataEntry.COLUMN_START + " DESC"
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Cursor data) {
-        HistoryContract.View view = mView.get();
-        if (null != view)
-            view.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset() {
-        HistoryContract.View view = mView.get();
-        if (null != view)
-            view.swapCursor(null);
+        EventBus.getDefault().register(this);
+        historyView.swapCharges(new HistoryRepository(context).getCharges());
     }
 
     @Override
     public void removeIrrelevantEntries() {
-        int deletedCount = new BatteryDataRepository(mContext.get()).deleteIrrelevant();
+        long deletedCount = new HistoryRepository(mContext.get()).deleteIrrelevantCharges();
 
         HistoryContract.View view = mView.get();
         if (null != view)
@@ -90,8 +45,8 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
     }
 
     @Override
-    public void removeEntries(List<Long> entries) {
-        int deletedCount = new BatteryDataRepository(mContext.get()).delete(entries);
+    public void removeEntries(long... entries) {
+        long deletedCount = new HistoryRepository(mContext.get()).deleteCharges(entries);
 
         HistoryContract.View view = mView.get();
         if (null != view)
@@ -99,11 +54,24 @@ public class HistoryPresenter implements HistoryContract.UserActionsListener {
     }
 
     @Override
-    public void mergeEntries(List<Long> entries) {
-        int mergedCount = new BatteryDataRepository(mContext.get()).merge(entries);
+    public void mergeEntries(long... entries) {
+        long mergedCount = new HistoryRepository(mContext.get()).mergeCharges(entries);
 
         HistoryContract.View view = mView.get();
         if (null != view)
             view.showMergedCountMessage(mergedCount);
+    }
+
+    @Subscribe
+    public void onDatabaseUpdateEvent(DatabaseUpdateEvent event) {
+        HistoryContract.View view = mView.get();
+        if (null != view)
+            view.swapCharges(new HistoryRepository(mContext.get()).getCharges());
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        EventBus.getDefault().unregister(this);
+        super.finalize();
     }
 }

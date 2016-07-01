@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import net.kacpak.batterychargingmonitor.App;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * Aktualny status baterii
@@ -34,18 +34,15 @@ public class BatteryStatus {
     private int mCurrentAvg;
 
     /**
-     * Ścieżka do folderu systemowego zawierającego dane o stanie baterii
-     */
-    private static final String mBatteryDataPath = "/sys/class/power_supply/battery/";
-
-    /**
      * Tworzy obiekt do odczytu stanu baterii
      */
     public BatteryStatus() {
         IntentFilter mFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         mBatteryStatus = App.getContext().registerReceiver(null, mFilter);
-        mCurrent = readBatteryStatus("current_now");
-        mCurrentAvg = readBatteryStatus("current_avg");
+        if (BatteryDataPaths.CurrentAvg != null)
+            mCurrentAvg = readBatteryStatus(BatteryDataPaths.CurrentAvg);
+        if (BatteryDataPaths.CurrentNow != null)
+            mCurrent = readBatteryStatus(BatteryDataPaths.CurrentNow);
     }
 
     /**
@@ -200,7 +197,7 @@ public class BatteryStatus {
      * Informuje czy dane o obecnym natężeniu prądu są dostępne
      */
     public boolean isCurrentAvailable() {
-        return isBatteryStatusAvailable("current_now");
+        return isBatteryStatusAvailable(BatteryDataPaths.CurrentNow);
     }
 
     /**
@@ -214,15 +211,15 @@ public class BatteryStatus {
      * Informuje czy dane o średnim natężeniu prądu są dostępne
      */
     public boolean isCurrentAverageAvailable() {
-        return isBatteryStatusAvailable("current_avg");
+        return isBatteryStatusAvailable(BatteryDataPaths.CurrentAvg);
     }
 
     /**
      * Zwraca wartość z danego pliku lub 0
-     * @param filename
+     * @param path
      */
-    private int readBatteryStatus(@NonNull String filename) {
-        File file = new File(mBatteryDataPath + filename);
+    private int readBatteryStatus(@NonNull String path) {
+        File file = new File(path);
 
         if (file.exists()) {
             BufferedReader reader = null;
@@ -234,14 +231,9 @@ public class BatteryStatus {
                 return Integer.parseInt(line) / 1000;
 
             } catch (Exception e) {
-                Log.e("Read file: " + filename, e.toString());
-
+                /* Do nothing */
             } finally {
-                try {
-                    if (reader != null) reader.close();
-                } catch (IOException e) {
-                    Log.e("Close file: " + filename, e.toString());
-                }
+                IOUtils.closeQuietly(reader);
             }
         }
 
@@ -250,10 +242,10 @@ public class BatteryStatus {
 
     /**
      * Sprawdza czy dany stan baterii jest przechowywany w plikach systemowych
-     * @param filename nazwa pliku
+     * @param path nazwa pliku
      */
-    private boolean isBatteryStatusAvailable(@NonNull String filename) {
-        File file = new File(mBatteryDataPath + filename);
+    private boolean isBatteryStatusAvailable(@NonNull String path) {
+        File file = new File(path);
         return file.exists();
     }
 }

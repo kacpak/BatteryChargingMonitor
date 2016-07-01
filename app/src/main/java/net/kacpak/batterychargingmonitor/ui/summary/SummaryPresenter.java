@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import net.kacpak.batterychargingmonitor.R;
-import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
 import net.kacpak.batterychargingmonitor.data.UserPreferences;
+import net.kacpak.batterychargingmonitor.data.database.HistoryRepository;
 
 import java.lang.ref.WeakReference;
 
@@ -56,7 +56,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
      * Aktualizuje obecny stan baterii
      */
     private void updateBatteryStatus() {
-        mBatteryStatus = new BatteryDataRepository(mContext).getStatus();
+        mBatteryStatus = new HistoryRepository(mContext).getStatus();
     }
 
     /**
@@ -105,7 +105,7 @@ public class SummaryPresenter implements SummaryContract.UserActionsListener {
 
         // Licznik ładowań
         view.setBatteryChargingCounter(
-                new BatteryDataRepository(mContext).getChargedCount()
+                new HistoryRepository(mContext).getChargesCount()
         );
     }
 

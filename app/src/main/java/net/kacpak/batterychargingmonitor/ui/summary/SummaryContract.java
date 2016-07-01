@@ -12,7 +12,7 @@ public interface SummaryContract {
         void setBatteryCurrent(int current, int currentAvg);
         void setBatteryTemperatureInCelsius(double temperature);
         void setBatteryTemperatureInFahrenheit(double temperature);
-        void setBatteryChargingCounter(int counter);
+        void setBatteryChargingCounter(long counter);
         void hideBatteryCurrentData();
     }
 

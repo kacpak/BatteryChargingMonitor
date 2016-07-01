@@ -12,8 +12,8 @@ public interface HistoryDetailContract {
         void setChargingDuration(long hours, long minutes, long seconds);
         void setChargeBump(int startingPercentage);
         void setChargeBump(int startingPercentage, int finishedPercentage);
-        void setStartingTemperature(float startingTemperature);
-        void setFinishedTemperature(float finishedTemperature);
+        void setStartingTemperature(double startingTemperature);
+        void setFinishedTemperature(double finishedTemperature);
         void setStartingVoltage(int startingVoltage);
         void setFinishedVoltage(int finishedVoltage);
     }

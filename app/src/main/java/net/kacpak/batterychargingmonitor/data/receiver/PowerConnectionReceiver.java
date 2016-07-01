@@ -7,8 +7,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.kacpak.batterychargingmonitor.R;
-import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
+import net.kacpak.batterychargingmonitor.data.database.HistoryRepository;
 
 import java.util.Date;
 
@@ -54,7 +54,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
     public void startNewCharging() {
         try {
-            new BatteryDataRepository(mContext).add(
+            new HistoryRepository(mContext).startCharge(
                     new Date(),
                     mBatteryStatus.getPluggedInformation(),
                     mBatteryStatus.getChargePercentage(),
@@ -70,12 +70,11 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
     public void finishCharging() {
         try {
-            new BatteryDataRepository(mContext).finishCharging(
+            new HistoryRepository(mContext).finishCharge(
                     new Date(),
                     mBatteryStatus.getChargePercentage(),
                     mBatteryStatus.getTemperatureInCelsius(),
-                    mBatteryStatus.getVoltage(),
-                    null
+                    mBatteryStatus.getVoltage()
             );
 
         } catch (Exception e) {

@@ -3,9 +3,7 @@ package net.kacpak.batterychargingmonitor.ui.history;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.LoaderManager;
 import android.content.DialogInterface;
-import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -19,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,20 +24,20 @@ import android.widget.Toast;
 
 import net.kacpak.batterychargingmonitor.R;
 import net.kacpak.batterychargingmonitor.data.BatteryStatus;
+import net.kacpak.batterychargingmonitor.data.database.tables.Charge;
 import net.kacpak.batterychargingmonitor.ui.NavigationDrawerManipulation;
 import net.kacpak.batterychargingmonitor.ui.historydetail.HistoryDetailContract;
 import net.kacpak.batterychargingmonitor.ui.historydetail.HistoryDetailDialog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HistoryFragment extends Fragment implements
-        HistoryContract.View, LoaderManager.LoaderCallbacks<Cursor>,
-        AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
+        HistoryContract.View, AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
 
     /**
      * ID dla nowo-tworzonego Loadera
@@ -70,7 +67,6 @@ public class HistoryFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         mActionsListener = new HistoryPresenter(this, getActivity());
         getActivity().setTitle(R.string.title_history);
-        getLoaderManager().initLoader(HISTORY_LOADER, null, this);
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -85,7 +81,7 @@ public class HistoryFragment extends Fragment implements
         ButterKnife.bind(this, root);
         setHasOptionsMenu(true);
 
-        mHistoryAdapter = new HistoryAdapter(getActivity(), null);
+        mHistoryAdapter = new HistoryAdapter(getActivity(), new ArrayList<Charge>());
 
         mListView.setAdapter(mHistoryAdapter);
         mListView.setOnItemClickListener(this);
@@ -97,41 +93,27 @@ public class HistoryFragment extends Fragment implements
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return mActionsListener.onCreateLoader(id, args);
+    public void swapCharges(List<Charge> charges) {
+        mHistoryAdapter.clear();
+        mHistoryAdapter.addAll(charges);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mActionsListener.onLoadFinished(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mActionsListener.onLoaderReset();
-    }
-
-    @Override
-    public void swapCursor(Cursor cursor) {
-        mHistoryAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void showDeletedCountMessage(int count) {
+    public void showDeletedCountMessage(long count) {
         Toast.makeText(getActivity(), getString(R.string.history_list_counted_entries_deleted, count), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showMergedCountMessage(int count) {
+    public void showMergedCountMessage(long count) {
         Toast.makeText(getActivity(), getString(R.string.history_list_counted_entries_merged, count), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-        if (cursor != null) {
+        Charge charge = (Charge) parent.getItemAtPosition(position);
+        if (charge != null) {
             Bundle args = new Bundle();
-            args.putLong(HistoryDetailContract.CHARGE_ID, cursor.getLong(0));
+            args.putLong(HistoryDetailContract.CHARGE_ID, charge.id);
 
             DialogFragment fragment = new HistoryDetailDialog();
             fragment.setArguments(args);
@@ -228,17 +210,18 @@ public class HistoryFragment extends Fragment implements
      * Zwraca id zaznaczonych elementów
      * @return lista z id zaznaczonych elementów
      */
-    private List<Long> getSelectedEntriesIds() {
+    private long[] getSelectedEntriesIds() {
         List<Long> ids = new ArrayList<>();
         SparseBooleanArray positions = mListView.getCheckedItemPositions();
 
         for (int i = 0; i < positions.size(); i++) {
             if (positions.valueAt(i)) {
-                Cursor item = (Cursor) mHistoryAdapter.getItem(positions.keyAt(i));
-                ids.add(item.getLong(0));
+                Charge item = mHistoryAdapter.getItem(positions.keyAt(i));
+                ids.add(item.id);
             }
         }
 
-        return ids;
+        Long[] array = new Long[ids.size()];
+        return ArrayUtils.toPrimitive(ids.toArray(array));
     }
 }

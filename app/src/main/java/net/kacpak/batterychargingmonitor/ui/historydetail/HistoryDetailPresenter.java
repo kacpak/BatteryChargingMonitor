@@ -2,8 +2,8 @@ package net.kacpak.batterychargingmonitor.ui.historydetail;
 
 import android.content.Context;
 
-import net.kacpak.batterychargingmonitor.data.BatteryDataRepository;
-import net.kacpak.batterychargingmonitor.data.database.ChargeInformation;
+import net.kacpak.batterychargingmonitor.data.database.HistoryRepository;
+import net.kacpak.batterychargingmonitor.data.database.tables.Charge;
 
 import java.lang.ref.WeakReference;
 
@@ -11,11 +11,11 @@ public class HistoryDetailPresenter implements HistoryDetailContract.UserActions
 
     private WeakReference<HistoryDetailContract.View> mHistoryDetailView;
 
-    private ChargeInformation mChargeInformation;
+    private Charge mChargeInformation;
 
     public HistoryDetailPresenter(HistoryDetailContract.View historyDetailView, Context context, long chargeId) {
         mHistoryDetailView = new WeakReference<>(historyDetailView);
-        mChargeInformation = new BatteryDataRepository(context).getChargeInformation(chargeId);
+        mChargeInformation = new HistoryRepository(context).getChargeInformation(chargeId);
     }
 
     @Override
@@ -26,10 +26,10 @@ public class HistoryDetailPresenter implements HistoryDetailContract.UserActions
             return;
 
         // Initial battery charge
-        view.setChargeBump(mChargeInformation.getStartPercentage());
+        view.setChargeBump(mChargeInformation.startPercentage);
 
         // Charger Type
-        view.setChargerType(mChargeInformation.getType());
+        view.setChargerType(mChargeInformation.chargerType);
 
         // Duration
         long seconds = mChargeInformation.getDuration() / 1000 % 60;
@@ -38,25 +38,25 @@ public class HistoryDetailPresenter implements HistoryDetailContract.UserActions
         view.setChargingDuration(hours, minutes, seconds);
 
         // Starting Date
-        view.setChargingStartDate(mChargeInformation.getStartDate());
+        view.setChargingStartDate(mChargeInformation.start);
 
         // Starting Temperature
-        view.setStartingTemperature(mChargeInformation.getStartTemperature());
+        view.setStartingTemperature(mChargeInformation.startTemperature);
 
         // Starting Voltage
-        view.setStartingVoltage(mChargeInformation.getStartVoltage());
+        view.setStartingVoltage(mChargeInformation.startVoltage);
 
         // If charging finished
-        if (!mChargeInformation.isFinished())
+        if (!mChargeInformation.chargeFinished)
             return;
 
         // Charge Bump
-        view.setChargeBump(mChargeInformation.getStartPercentage(), mChargeInformation.getStopPercentage());
+        view.setChargeBump(mChargeInformation.startPercentage, mChargeInformation.stopPercentage);
 
         // Finished Temperature
-        view.setFinishedTemperature(mChargeInformation.getStopTemperature());
+        view.setFinishedTemperature(mChargeInformation.stopTemperature);
 
         // Finished Voltage
-        view.setFinishedVoltage(mChargeInformation.getStopVoltage());
+        view.setFinishedVoltage(mChargeInformation.stopVoltage);
     }
 }

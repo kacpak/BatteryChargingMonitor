@@ -133,7 +133,7 @@ public class HistoryDetailDialog extends DialogFragment implements HistoryDetail
     }
 
     @Override
-    public void setStartingTemperature(float startingTemperature) {
+    public void setStartingTemperature(double startingTemperature) {
         mTemperatureStartTextView.setText(String.format(
                 getString(R.string.temperature_celsius),
                 startingTemperature
@@ -141,7 +141,7 @@ public class HistoryDetailDialog extends DialogFragment implements HistoryDetail
     }
 
     @Override
-    public void setFinishedTemperature(float finishedTemperature) {
+    public void setFinishedTemperature(double finishedTemperature) {
         mTemperatureStopTextView.setText(String.format(
                 getString(R.string.temperature_celsius),
                 finishedTemperature

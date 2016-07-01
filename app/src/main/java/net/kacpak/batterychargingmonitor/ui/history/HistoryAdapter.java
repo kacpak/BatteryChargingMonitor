@@ -1,68 +1,69 @@
 package net.kacpak.batterychargingmonitor.ui.history;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.BatteryManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import net.kacpak.batterychargingmonitor.R;
-import net.kacpak.batterychargingmonitor.data.database.ChargeInformation;
+import net.kacpak.batterychargingmonitor.data.database.tables.Charge;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistoryAdapter extends CursorAdapter {
+public class HistoryAdapter extends ArrayAdapter<Charge> {
 
-    HistoryAdapter(Context context, Cursor cursor) {
-        super(context, cursor, 0);
+    HistoryAdapter(Context context, List<Charge> charges) {
+        super(context, 0, charges);
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_history, parent, false);
-        view.setTag(new HistoryAdapterViewHolder(view));
-        return view;
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Charge charge = getItem(position);
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ChargeInformation data = new ChargeInformation(cursor);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_history, parent, false);
+            convertView.setTag(new HistoryAdapterViewHolder(convertView));
+        }
 
         String type;
-        switch (data.getType()) {
+        switch (charge.chargerType) {
             case 0:
-                type = context.getString(R.string.power_state_mixed);
+                type = getContext().getString(R.string.power_state_mixed);
                 break;
             case BatteryManager.BATTERY_PLUGGED_AC:
-                type = context.getString(R.string.power_state_ac);
+                type = getContext().getString(R.string.power_state_ac);
                 break;
             case BatteryManager.BATTERY_PLUGGED_USB:
-                type = context.getString(R.string.power_state_usb);
+                type = getContext().getString(R.string.power_state_usb);
                 break;
             case BatteryManager.BATTERY_PLUGGED_WIRELESS:
-                type = context.getString(R.string.power_state_wireless);
+                type = getContext().getString(R.string.power_state_wireless);
                 break;
             default:
                 type = "?";
         }
 
-        long seconds = data.getDuration() / 1000 % 60;
-        long minutes = data.getDuration() / (60 * 1000) % 60;
-        long hours = data.getDuration() / (60 * 60 * 1000);
-        String duration = String.format(context.getString(R.string.history_list_item_duration), hours, minutes, seconds);
+        long seconds = charge.getDuration() / 1000 % 60;
+        long minutes = charge.getDuration() / (60 * 1000) % 60;
+        long hours = charge.getDuration() / (60 * 60 * 1000);
+        String duration = String.format(getContext().getString(R.string.history_list_item_duration), hours, minutes, seconds);
 
-        String percentageIncrease = data.isFinished()
-                ? String.format(context.getString(R.string.history_list_item_percentage_increase), data.getStartPercentage(), data.getStopPercentage())
-                : String.format(context.getString(R.string.history_list_item_percentage_while_charging), data.getStartPercentage());
+        String percentageIncrease = charge.chargeFinished
+                ? String.format(getContext().getString(R.string.history_list_item_percentage_increase), charge.startPercentage, charge.stopPercentage)
+                : String.format(getContext().getString(R.string.history_list_item_percentage_while_charging), charge.startPercentage);
 
-        HistoryAdapterViewHolder holder = (HistoryAdapterViewHolder) view.getTag();
+        HistoryAdapterViewHolder holder = (HistoryAdapterViewHolder) convertView.getTag();
         holder.type.setText(type);
         holder.duration.setText(duration);
         holder.percentage_increase.setText(percentageIncrease);
+
+        return convertView;
     }
 
     /**
