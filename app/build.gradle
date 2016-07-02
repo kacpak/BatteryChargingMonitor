@@ -9,8 +9,8 @@ android {
         applicationId "net.kacpak.batterychargingmonitor"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 1001
+        versionName "1.0.1"
     }
     buildTypes {
         release {
@@ -21,7 +21,9 @@ android {
         debug {
             debuggable true
             minifyEnabled true
-            applicationIdSuffix ".debug"
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix '.debug'
             versionNameSuffix '.debug'
         }
     }
